@@ -15,6 +15,28 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import "./styles.css";
 
+import React, { useState, useEffect, useContext, createContext } from "react";
+import "./styles.css";
+
+// YENİ EKLENECEK KISIM =======================================================
+export interface Randevu {
+  id: string;
+  musteriID: string;
+  musteriAdi: string;
+  tarih: string;
+  saat: string;
+  hizmet: string;
+  personel: string;
+  status: string;
+  mesajDurum: string;
+}
+// ============================================================================
+
+// ============================================================================
+// 🔐 CONTEXT: Auth & State Management
+// ============================================================================
+const AppContext = createContext<any>(null);
+
 // ============================================================================
 // 🔐 CONTEXT: Auth & State Management
 // ============================================================================
