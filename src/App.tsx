@@ -15,8 +15,6 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import "./styles.css";
 
-import React, { useState, useEffect, useContext, createContext } from "react";
-import "./styles.css";
 
 // YENİ EKLENECEK KISIM =======================================================
 export interface Randevu {
