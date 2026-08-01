@@ -15,7 +15,6 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import "./styles.css";
 
-
 // YENİ EKLENECEK KISIM =======================================================
 export interface Randevu {
   id: string;
@@ -28,6 +27,16 @@ export interface Randevu {
   status: string;
   mesajDurum: string;
 }
+
+export interface Log {
+  zamanı: string;
+  musteriAdi: string;
+  telefon: string;
+  sablon: string;
+  status: string;
+  hata?: string;
+}
+// ============================================================================
 
 // ============================================================================
 // 🔐 CONTEXT: Auth & State Management
@@ -121,7 +130,7 @@ function LoginPage() {
 
   const handleLogin = (e: any) => {
     e.preventDefault();
-   const user_data = personel[username.toLowerCase() as keyof typeof personel];
+    const user_data = personel[username.toLowerCase() as keyof typeof personel];
 
     if (user_data && user_data.sifre === password) {
       setUser({
@@ -283,7 +292,7 @@ function DashboardView() {
   const mesajBasarisiOrani =
     loglar.length > 0
       ? Math.round(
-          (loglar.filter((l) => l.status === "Başarılı").length /
+          (loglar.filter((l: Log) => l.status === "Başarılı").length /
             loglar.length) *
             100
         )
@@ -498,7 +507,7 @@ function MusterilarView() {
           </tr>
         </thead>
         <tbody>
-          {musterilar.map((m) => (
+          {musterilar.map((m: any) => (
             <tr key={m.id}>
               <td>{m.ad}</td>
               <td>{m.telefon}</td>
@@ -539,7 +548,7 @@ function RandevularView() {
 
   const handleAddRandevu = async () => {
     if (formData.musteriID && formData.tarih && formData.saat) {
-      const musteri = musterilar.find((m) => m.id === formData.musteriID);
+      const musteri = musterilar.find((m: any) => m.id === formData.musteriID);
       const newRandevu = {
         id: "R" + Math.floor(Math.random() * 10000),
         musteriID: formData.musteriID,
@@ -597,7 +606,7 @@ function RandevularView() {
                 }
               >
                 <option value="">Seç...</option>
-                {musterilar.map((m) => (
+                {musterilar.map((m: any) => (
                   <option key={m.id} value={m.id}>
                     {m.ad}
                   </option>
@@ -676,7 +685,7 @@ function RandevularView() {
           </tr>
         </thead>
         <tbody>
-          {randevular.map((r) => (
+          {randevular.map((r: Randevu) => (
             <tr key={r.id}>
               <td>{r.tarih}</td>
               <td>{r.saat}</td>
@@ -748,7 +757,7 @@ function MessagesView() {
               </tr>
             </thead>
             <tbody>
-              {sablonlar.map((s) => (
+              {sablonlar.map((s: any) => (
                 <tr key={s.id}>
                   <td>{s.ad}</td>
                   <td>{s.icerik}</td>
@@ -789,7 +798,7 @@ function LoglarView() {
           </tr>
         </thead>
         <tbody>
-          {loglar.map((l, idx) => (
+          {loglar.map((l: Log, idx: number) => (
             <tr key={idx}>
               <td>{l.zamanı}</td>
               <td>{l.musteriAdi}</td>
