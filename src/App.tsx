@@ -107,7 +107,7 @@ function LoginPage() {
 
   const handleLogin = (e: any) => {
     e.preventDefault();
-    const user_data = personel[username.toLowerCase()];
+   const user_data = personel[username.toLowerCase() as keyof typeof personel];
 
     if (user_data && user_data.sifre === password) {
       setUser({
