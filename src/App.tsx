@@ -551,7 +551,6 @@ function RandevularView() {
       const musteri = musterilar.find((m: any) => m.id === formData.musteriID);
       const newRandevu = {
         id: "R" + Math.floor(Math.random() * 10000),
-        musteriID: formData.musteriID,
         musteriAdi: musteri?.ad || "Bilinmiyor",
         ...formData,
         mesajDurum: "Bekleniyor",
