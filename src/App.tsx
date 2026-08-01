@@ -19,7 +19,7 @@ import "./styles.css";
 // 🔐 CONTEXT: Auth & State Management
 // ============================================================================
 
-const AppContext = createContext();
+const AppContext = createContext<any>(null);
 
 function AppProvider({ children }) {
   const [user, setUser] = useState(null);
