@@ -19,15 +19,75 @@ import "./styles.css";
 // 🔐 CONTEXT: Auth & State Management
 // ============================================================================
 
-const AppContext = createContext();
+interface User {
+  username: string;
+  displayName: string;
+  rol: string;
+}
 
-function AppProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [musterilar, setMusterilar] = useState([]);
-  const [randevular, setRandevular] = useState([]);
-  const [hizmetler, setHizmetler] = useState([]);
-  const [sablonlar, setSablonlar] = useState([]);
-  const [loglar, setLoglar] = useState([]);
+interface Musteri {
+  id: string;
+  ad: string;
+  telefon: string;
+  email: string;
+  hizmetGecmisi: string;
+  riskSeviyesi: string;
+  kaydolmaTarihi: string;
+}
+
+interface Randevu {
+  id: string;
+  musteriID: string;
+  musteriAdi: string;
+  tarih: string;
+  saat: string;
+  hizmet: string;
+  personel: string;
+  status: string;
+  mesajDurum: string;
+}
+
+interface Sablon {
+  id: string;
+  ad: string;
+  icerik: string;
+  tetik: string;
+}
+
+interface MesajLogu {
+  zamanı: string;
+  musteriAdi: string;
+  telefon: string;
+  sablon: string;
+  status: string;
+  hata?: string;
+}
+
+interface AppContextType {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  musterilar: Musteri[];
+  setMusterilar: React.Dispatch<React.SetStateAction<Musteri[]>>;
+  randevular: Randevu[];
+  setRandevular: React.Dispatch<React.SetStateAction<Randevu[]>>;
+  hizmetler: unknown[];
+  setHizmetler: React.Dispatch<React.SetStateAction<unknown[]>>;
+  sablonlar: Sablon[];
+  setSablonlar: React.Dispatch<React.SetStateAction<Sablon[]>>;
+  loglar: MesajLogu[];
+  setLoglar: React.Dispatch<React.SetStateAction<MesajLogu[]>>;
+  loading: boolean;
+}
+
+const AppContext = createContext<AppContextType | null>(null);
+
+function AppProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [musterilar, setMusterilar] = useState<Musteri[]>([]);
+  const [randevular, setRandevular] = useState<Randevu[]>([]);
+  const [hizmetler, setHizmetler] = useState<unknown[]>([]);
+  const [sablonlar, setSablonlar] = useState<Sablon[]>([]);
+  const [loglar, setLoglar] = useState<MesajLogu[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Google Sheets API'ye bağlan (setup gerekli)
@@ -99,13 +159,13 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const personel = {
-    Abdullah: { sifre: "Abdullah123!", rol: "Uzman" },
-    Aynure: { sifre: "Aynure123!", rol: "Uzman" },
+  const personel: Record<string, { sifre: string; rol: string }> = {
+    abdullah: { sifre: "Abdullah123!", rol: "Uzman" },
+    aynure: { sifre: "Aynure123!", rol: "Uzman" },
     admin: { sifre: "Admin123!", rol: "Admin" },
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const user_data = personel[username.toLowerCase()];
 
@@ -180,6 +240,10 @@ function LoginPage() {
 function Dashboard() {
   const { user, musterilar, randevular, loglar } = useApp();
   const [selectedTab, setSelectedTab] = useState("dashboard");
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="app-container">
