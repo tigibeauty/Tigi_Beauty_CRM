@@ -105,7 +105,7 @@ function LoginPage() {
     admin: { sifre: "Admin123!", rol: "Admin" },
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = (e: any) => {
     e.preventDefault();
     const user_data = personel[username.toLowerCase()];
 
