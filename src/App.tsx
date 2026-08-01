@@ -21,7 +21,7 @@ import "./styles.css";
 
 const AppContext = createContext<any>(null);
 
-function AppProvider({ children }) {
+function AppProvider({ children }: { children: any }) {
   const [user, setUser] = useState(null);
   const [musterilar, setMusterilar] = useState([]);
   const [randevular, setRandevular] = useState([]);
