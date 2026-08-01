@@ -260,7 +260,7 @@ function Dashboard() {
 function DashboardView() {
   const { musterilar, randevular, loglar } = useApp();
 
-  const bugununRandevulari = randevular.filter((r) => {
+  const bugununRandevulari = randevular.filter((r: Randevu) => {
     const tarih = new Date(r.tarih);
     const bugun = new Date();
     return tarih.toDateString() === bugun.toDateString();
@@ -326,7 +326,7 @@ function DashboardView() {
               </tr>
             </thead>
             <tbody>
-              {bugununRandevulari.map((r, idx) => (
+              {bugununRandevulari.map((r: Randevu, idx: number) => (
                 <tr key={idx}>
                   <td>{r.saat}</td>
                   <td>{r.musteriAdi}</td>
