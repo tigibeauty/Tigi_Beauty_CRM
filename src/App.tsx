@@ -9,13 +9,16 @@
  * - Mesaj Logları
  * - Analytics
  *
- * Deploy: Firebase Hosting veya Vercel
+ * Deploy: Firebase Hosting veya Vercel / Netlify
  */
 
 import React, { useState, useEffect, useContext, createContext } from "react";
 import "./styles.css";
 
-// YENİ EKLENECEK KISIM =======================================================
+// ============================================================================
+// 📦 TYPES & INTERFACES
+// ============================================================================
+
 export interface Randevu {
   id: string;
   musteriID: string;
@@ -36,7 +39,6 @@ export interface Log {
   status: string;
   hata?: string;
 }
-// ============================================================================
 
 // ============================================================================
 // 🔐 CONTEXT: Auth & State Management
@@ -53,10 +55,9 @@ function AppProvider({ children }: { children: any }) {
   const [loglar, setLoglar] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Google Sheets API'ye bağlan (setup gerekli)
+  // Google Sheets API'ye bağlan
   useEffect(() => {
     if (user) {
-      // TODO: Google Sheets API'den veri çek
       console.log("Loading data for user:", user);
       loadDataFromSheets();
     }
@@ -65,7 +66,6 @@ function AppProvider({ children }: { children: any }) {
   const loadDataFromSheets = async () => {
     setLoading(true);
     try {
-      // DİKKAT: Aşağıdaki tırnak işaretlerinin içine az önce kopyaladığınız linki yapıştırın!
       const WEB_APP_URL =
         "https://script.google.com/macros/s/AKfycbwuvIpjC7ajwxmgJ034TD6NhXoX9Kn6H2pyuSUSYQnuq9gy1Aok7NhqPNv5P5g8fEZq/exec";
 
@@ -123,19 +123,20 @@ function LoginPage() {
   const [error, setError] = useState("");
 
   const personel = {
-    Abdullah: { sifre: "Abdullah123!", rol: "Uzman" },
-    Aynure: { sifre: "Aynure123!", rol: "Uzman" },
-    admin: { sifre: "Admin123!", rol: "Admin" },
+    abdullah: { sifre: "Abdullah123@!", rol: "Uzman", name: "Abdullah" },
+    aynure: { sifre: "Aynure123@!", rol: "Uzman", name: "Aynure" },
+    admin: { sifre: "Admin123@!", rol: "Admin", name: "Admin" },
   };
 
   const handleLogin = (e: any) => {
     e.preventDefault();
-    const user_data = personel[username.toLowerCase() as keyof typeof personel];
+    const cleanUsername = username.trim().toLowerCase();
+    const user_data = personel[cleanUsername as keyof typeof personel];
 
     if (user_data && user_data.sifre === password) {
       setUser({
-        username: username.toLowerCase(),
-        displayName: username.charAt(0).toUpperCase() + username.slice(1),
+        username: cleanUsername,
+        displayName: user_data.name,
         rol: user_data.rol,
       });
       setError("");
@@ -157,7 +158,7 @@ function LoginPage() {
             <label>Kullanıcı Adı</label>
             <input
               type="text"
-              placeholder="Abdullah, Aynure veya Admin"
+              placeholder="Kullanıcı adınızı girin"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoFocus
@@ -180,17 +181,6 @@ function LoginPage() {
             Giriş Yap
           </button>
         </form>
-
-        <div className="login-help">
-          <p>
-            <strong>Test Hesapları:</strong>
-          </p>
-          <ul>
-            <li>Abdullah / Abdullah123!</li>
-            <li>Aynure / Aynure123!</li>
-            <li>Admin / Admin123!</li>
-          </ul>
-        </div>
       </div>
     </div>
   );
@@ -391,7 +381,6 @@ function MusterilarView() {
         kaydolmaTarihi: new Date().toLocaleDateString("tr-TR"),
       };
 
-      // 1. Ekrana hemen ekle (Hızlı görünmesi için)
       setMusterilar([...musterilar, newMusteri]);
       setFormData({
         ad: "",
@@ -402,10 +391,7 @@ function MusterilarView() {
       });
       setShowModal(false);
 
-      // 2. Arka planda Google Sheets'e gönder
       try {
-        // DİKKAT: Buraya da YENİ kopyaladığınız linki yapıştırın!
-        // Linkin sonuna ?action=yeniMusteri eklemeyi UNUTMAYIN.
         const WEB_APP_URL =
           "https://script.google.com/macros/s/AKfycbwuvIpjC7ajwxmgJ034TD6NhXoX9Kn6H2pyuSUSYQnuq9gy1Aok7NhqPNv5P5g8fEZq/exec" +
           "?action=yeniMusteri";
@@ -535,7 +521,7 @@ function MusterilarView() {
 // ============================================================================
 
 function RandevularView() {
-  const { randevular, setRandevular, musterilar, hizmetler } = useApp();
+  const { randevular, setRandevular, musterilar } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     musteriID: "",
@@ -568,7 +554,6 @@ function RandevularView() {
       setShowModal(false);
 
       try {
-        // DİKKAT: Yeni kopyaladığınız linki buraya yapıştırın. Sonunda ?action=yeniRandevu OLACAK.
         const WEB_APP_URL =
           "https://script.google.com/macros/s/AKfycbwuvIpjC7ajwxmgJ034TD6NhXoX9Kn6H2pyuSUSYQnuq9gy1Aok7NhqPNv5P5g8fEZq/exec" +
           "?action=yeniRandevu";
@@ -714,9 +699,7 @@ function RandevularView() {
 // ============================================================================
 
 function MessagesView() {
-  const { sablonlar, setSablonlar } = useApp();
-  const [showModal, setShowModal] = useState(false);
-  const [editingID, setEditingID] = useState(null);
+  const { sablonlar } = useApp();
 
   return (
     <div className="view-container">
